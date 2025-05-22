@@ -31,6 +31,26 @@ class Graph:
             return 
         self.adj[u].remove(v)
         self.adj[v].remove(u)
+    
+    def copy_without_vertices(self, vertices_to_remove):
+        """
+        Create a deep copy of the graph excluding specified vertices.
+        :param vertices_to_remove: A set of vertex indices to remove.
+        :return: A new Graph object with the specified vertices removed.
+        """
+        new_G = Graph(self.n)
+        vertices_to_remove = set(vertices_to_remove)
+
+        for u in range(self.n):
+            if u in vertices_to_remove:
+                continue
+            for v in self.adj[u]:
+                if v in vertices_to_remove:
+                    continue
+                if u < v: 
+                    new_G.add_edge(u, v)
+
+        return new_G
 
     def remove_vertex(self, v):
         """
