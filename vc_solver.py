@@ -33,11 +33,9 @@ class VcSolver:
         if lp_val > k:
             return False, None
 
-        lp_ok, solution = self.lp_solver.solve_half_integral(G)
-        if not lp_ok:
-            return False, None
+        lp_solution_only_halfs, solution = self.lp_solver.solve_half_integral(G)
 
-        if not self._is_all_half(solution):
+        if not lp_solution_only_halfs:
             G_red, k_red, added = self.reducer.apply(G, solution, k)
             chosen |= set(added)
             _, new_solution = self.lp_solver.solve_half_integral(G_red)
@@ -70,9 +68,6 @@ class VcSolver:
             return True, cover2
 
         return False, None
-
-    def _is_all_half(self, solution):
-        return all(abs(val - 0.5) < 1e-6 for val in solution.values())
 
 
 
