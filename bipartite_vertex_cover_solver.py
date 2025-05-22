@@ -34,13 +34,49 @@ class BipartiteVertexCoverSolver:
             self.edges_adj_list[u].append(edge)
             self.edges_adj_list[v].append(edge)
             self.edges.append(edge)
+        
+        self.is_vertex_free = [True for _ in range(self.num_vertices)]
+
+    def add_edge(self, u, v):
+        """
+        Adds an undirected edge between u and v to the graph.
+        """
+        if self.edge_adj_matrix[u][v] is not None:
+            return
+
+        edge = MatchingEdge(u, v)
+        self.edge_adj_matrix[u][v] = edge
+        self.edge_adj_matrix[v][u] = edge
+        self.edges_adj_list[u].append(edge)
+        self.edges_adj_list[v].append(edge)
+        self.edges.append(edge)
+
+    def remove_edge(self, u, v):
+        """
+        Removes the undirected edge between u and v from the graph.
+        """
+        edge = self.edge_adj_matrix[u][v]
+        if edge is None:
+            return
+        
+        if edge.is_in_matching:
+            self.is_vertex_free[v] = True
+            self.is_vertex_free[u] = True
+
+        if edge in self.edges_adj_list[u]:
+            self.edges_adj_list[u].remove(edge)
+        if edge in self.edges_adj_list[v]:
+            self.edges_adj_list[v].remove(edge)
+        if edge in self.edges:
+            self.edges.remove(edge)
+
+        self.edge_adj_matrix[u][v] = None
+        self.edge_adj_matrix[v][u] = None
 
     def find_matching(self):
         """
         Finds a maximum matching using layered BFS and DFS.
         """
-        self.is_vertex_free = [True for _ in range(self.num_vertices)]
-
         while True:
             num_layers, layers = self.find_layers()
             if num_layers == 0:
