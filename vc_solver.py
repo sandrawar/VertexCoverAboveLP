@@ -71,7 +71,7 @@ class VcSolver:
 
         return False, None
 
-    def is_all_half(solution):
+    def _is_all_half(self, solution):
         return all(abs(val - 0.5) < 1e-6 for val in solution.values())
 
 
