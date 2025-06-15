@@ -89,3 +89,9 @@ class Graph:
                 if v in index_map and index_map[u] < index_map[v]: 
                     subgraph.add_edge(index_map[u], index_map[v])
         return subgraph
+    
+    def __str__(self):
+        lines = [f"Graph with {self.n} vertices and {len(self.edges)} edges:"]
+        for u, v in sorted(self.edges):
+            lines.append(f"{u} -- {v}")
+        return "\n".join(lines)

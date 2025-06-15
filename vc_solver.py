@@ -7,9 +7,7 @@ class VcSolver:
         self.reducer = Reducer()
 
     def solve(self, G, k):
-        lp_ok, solution = self.lp_solver.solve_half_integral(G)
-        if not lp_ok:
-            return False, None
+        _, solution = self.lp_solver.solve_half_integral(G)
 
         lp_val = sum(solution.values())
         return self._branch(G, k, lp_val, set())
@@ -32,6 +30,9 @@ class VcSolver:
 
         if lp_val > k:
             return False, None
+        
+        if not G.get_edges():
+            return True, chosen
 
         lp_solution_only_halfs, solution = self.lp_solver.solve_half_integral(G)
 
@@ -41,9 +42,6 @@ class VcSolver:
             _, new_solution = self.lp_solver.solve_half_integral(G_red)
             new_lp = sum(new_solution.values())
             return self._branch(G_red, k_red, new_lp, chosen)
-
-        if not G.get_edges():
-            return True, chosen
 
         for v in G.get_vertices():
             if G.get_neighbors(v):
