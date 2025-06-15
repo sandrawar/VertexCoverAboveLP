@@ -37,6 +37,7 @@ class VcSolver:
         lp_solution_only_halfs, solution = self.lp_solver.solve_half_integral(G)
 
         if not lp_solution_only_halfs:
+            print(solution)
             G_red, k_red, added = self.reducer.apply(G, solution, k)
             chosen |= set(added)
             _, new_solution = self.lp_solver.solve_half_integral(G_red)

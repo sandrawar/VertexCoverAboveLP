@@ -16,8 +16,9 @@ class LPSolver:
 
         lp_solution = self.get_lp_from_vc(vc, G.n)
 
-        if not self.check_if_all_half(lp_solution):
+        if not self.check_if_all_half(lp_solution, G):
              return False, lp_solution
+
 
         for v in range(G.n):
             for u in G.get_neighbors(v):
@@ -45,5 +46,10 @@ class LPSolver:
             
             return result
     
-    def check_if_all_half(self, solution):
-        return all(abs(val - 0.5) < 1e-6 for val in solution.values())
+    def check_if_all_half(self, solution, graph):
+        for v, val in solution.items():
+            if abs(val - 1.0) < 1e-6:
+                return False
+            if abs(val - 0.0) < 1e-6 and graph.get_neighbors(v):
+                return False
+        return True
