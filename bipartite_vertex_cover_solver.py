@@ -12,6 +12,11 @@ class MatchingEdge:
         Given one vertex of the edge, returns the opposite vertex.
         """
         return self.v if w == self.u else self.u
+    
+    def __str__(self):
+        return f"({self.u}, {self.v}){'*' if self.is_in_matching else ''}"
+    def __repr__(self):
+        return self.__str__()
 
 
 class BipartiteVertexCoverSolver:
@@ -171,6 +176,7 @@ class BipartiteVertexCoverSolver:
         # Start DFS from free vertices on the left partition
         start_vertices = [v for v in range(self.left_partition_size)
                           if self.get_partition(v) == 0 and self.is_vertex_free[v]]
+        
 
         for v in start_vertices:
             self.vertex_cover_dfs(v, visited)
